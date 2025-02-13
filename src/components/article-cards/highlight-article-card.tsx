@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { ArticlePreview } from '../../interfaces/article-interface';
 import NoImageIllustration from '../../assets/img/no-image.png';
+import { BadgeCategory } from '../badge-category';
 
 type HighlightArticleCardProps = {
   data: ArticlePreview;
@@ -16,7 +17,10 @@ export function HighlightArticleCard({ data }: HighlightArticleCardProps) {
           src={data.img_url ? data.img_url : NoImageIllustration}
         />
         <span className="text-xs font-bold tracking-widest text-[#16607d] uppercase">Highlight</span>
-        <h2 className="text-2xl leading-6 font-bold underline-offset-2 group-hover:underline">{data.title}</h2>
+        <h2 className="text-2xl leading-6 font-bold underline-offset-2 group-hover:underline">
+          {data.title}
+          {data.category && <BadgeCategory category={data.category} />}
+        </h2>
         <p>{data.description}</p>
         <div className="flex items-center">
           <div className="text-xs text-slate-400 first-letter:uppercase">

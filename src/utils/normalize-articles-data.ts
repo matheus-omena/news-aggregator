@@ -34,7 +34,10 @@ export function NormalizeArticlesData(
           (article as NewsOrgArticle).author ||
           undefined,
         category:
-          (article as NyTimesArticle).subsection_name || (article as TheGuardianArticle).sectionName || undefined,
+          (article as NyTimesArticle).section_name ||
+          (article as NyTimesArticle).subsection_name ||
+          (article as TheGuardianArticle).sectionName ||
+          undefined,
       }),
     );
 
