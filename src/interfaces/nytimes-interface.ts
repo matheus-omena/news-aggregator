@@ -21,6 +21,7 @@ export interface NyTimesArticle {
   document_type: string;
   news_desk: string;
   section_name: string;
+  subsection_name: string;
   byline: Byline;
   type_of_material: string;
   _id: string;
