@@ -5,39 +5,49 @@ import { NyTimesApiResponse } from '../interfaces/nytimes-interface';
 import { NewsOrgApiResponse } from '../interfaces/neworgs-interface';
 import { TheGuardianApiResponse } from '../interfaces/theguardian-interface';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 export function useNews() {
+  const searchQuery = useSelector((state: RootState) => state.search.query);
+
   const { data: nyTimesData, isPending: isNyTimesDataLoading } = useQuery({
     queryFn: async () => {
       const { apiBaseURL, apiKey } = externalNewsApis.NYTimes;
-      const endpoint = `${apiBaseURL}?q=&api-key=${apiKey}&pub_date=${moment().format('YYYY-MM-DD')}`;
+      let endpoint = `${apiBaseURL}?&q=`;
+      if (searchQuery) endpoint += searchQuery;
+      endpoint += `&api-key=${apiKey}&pub_date=${moment().format('YYYY-MM-DD')}`;
 
       const { data } = await axios.get<NyTimesApiResponse>(endpoint);
       return data?.response.docs;
     },
-    queryKey: ['NYTimesNews'],
+    queryKey: ['NYTimesNews', searchQuery],
   });
 
   const { data: newsOrgData, isPending: isNewsOrgDataLoading } = useQuery({
     queryFn: async () => {
       const { apiBaseURL, apiKey } = externalNewsApis.NewsOrg;
-      const endpoint = `${apiBaseURL}&apiKey=${apiKey}`;
+      let endpoint = `${apiBaseURL}&`;
+      if (searchQuery) endpoint += `q=${searchQuery}&`;
+      endpoint += `apiKey=${apiKey}`;
 
       const { data } = await axios.get<NewsOrgApiResponse>(endpoint);
       return data?.articles;
     },
-    queryKey: ['NewsOrgNews'],
+    queryKey: ['NewsOrgNews', searchQuery],
   });
 
   const { data: theGuardianData, isPending: isTheGuardianDataLoading } = useQuery({
     queryFn: async () => {
       const { apiBaseURL, apiKey } = externalNewsApis.TheGuardian;
-      const endpoint = `${apiBaseURL}?api-key=${apiKey}`;
+      let endpoint = `${apiBaseURL}?`;
+      if (searchQuery) endpoint += `q=${searchQuery}&`;
+      endpoint += `api-key=${apiKey}`;
 
       const { data } = await axios.get<TheGuardianApiResponse>(endpoint);
       return data?.response?.results;
     },
-    queryKey: ['TheGuardianNews'],
+    queryKey: ['TheGuardianNews', searchQuery],
   });
 
   return {

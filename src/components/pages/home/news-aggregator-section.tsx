@@ -20,7 +20,7 @@ export function NewsAggregatorSection({ title, logoUrl, data, isLoading }: NewsA
         <div className="flex-1 border-b border-slate-200" />
       </div>
 
-      {data && (
+      {data && data.length > 0 ? (
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
             <div className="col-span-1 lg:col-span-7">
@@ -36,11 +36,17 @@ export function NewsAggregatorSection({ title, logoUrl, data, isLoading }: NewsA
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {data.slice(4).map((article) => (
-              <RegularArticleCard data={article} />
-            ))}
-          </div>
+          {data.length >= 4 && (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {data.slice(4).map((article) => (
+                <RegularArticleCard key={article.title} data={article} />
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div>
+          <p className="text-slate-400">No news with the search term.</p>
         </div>
       )}
     </section>

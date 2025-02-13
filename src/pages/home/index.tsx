@@ -19,8 +19,6 @@ export default function Home() {
     isTheGuardianDataLoading,
   } = useNews();
 
-  console.log(NormalizeArticlesData(theGuardianNews));
-
   if (isNyTimesDataLoading && isNewsOrgDataLoading && isTheGuardianDataLoading) return <ArticlesSkeleton />;
 
   return (
