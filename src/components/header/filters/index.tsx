@@ -5,24 +5,50 @@ import { Button } from '../../form/button';
 import { Input } from '../../form/input';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
-import { setSearchQuery } from '../../../store/search-slice';
+import { setSearchCategory, setSearchPubDate, setSearchQuery, setSearchSources } from '../../../store/search-slice';
+import { Checkbox } from '../../form/checkbox';
+import { newsSources } from '../../../constants';
+import moment from 'moment';
 
 export function Filters() {
   const dispatch = useDispatch();
   const searchQuery = useSelector((state: RootState) => state.search.query);
+  const searchCategory = useSelector((state: RootState) => state.search.category);
+  const searchPubDate = useSelector((state: RootState) => state.search.pubDate);
+  const selectedSources = useSelector((state: RootState) => state.search.sources);
+
   const [query, setQuery] = useState<string>(searchQuery);
+  const [category, setCategory] = useState(searchCategory);
+  const [pubDate, setPubDate] = useState(searchPubDate);
+  const [sources, setSources] = useState<string[]>(selectedSources);
 
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
+  const toggleSource = (source: string) => {
+    const updatedSources = sources.includes(source) ? sources.filter((s) => s !== source) : [...sources, source];
+
+    setSources(updatedSources);
+  };
+
   const handleFilters = () => {
     dispatch(setSearchQuery(query));
+    dispatch(setSearchCategory(category));
+    dispatch(setSearchPubDate(pubDate));
+    dispatch(setSearchSources(sources));
 
     setShowFilters(false);
   };
 
   const clearFilters = () => {
     dispatch(setSearchQuery(''));
+    dispatch(setSearchCategory(''));
+    dispatch(setSearchPubDate(moment().format('YYYY-MM-DD')));
+    dispatch(setSearchSources([newsSources.newsApiOrg, newsSources.nyTimes, newsSources.theGuardian]));
+
     setQuery('');
+    setCategory('');
+    setPubDate(moment().format('YYYY-MM-DD'));
+    setSources([newsSources.newsApiOrg, newsSources.nyTimes, newsSources.theGuardian]);
 
     setShowFilters(false);
   };
@@ -43,7 +69,7 @@ export function Filters() {
                 <p className="text-sm">Do a more specific search according to your interest!</p>
               </div>
 
-              <div>
+              <div className="space-y-3">
                 <Input
                   name="therm"
                   label="Therm"
@@ -51,6 +77,44 @@ export function Filters() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
+                <Input
+                  name="pubDate"
+                  type="date"
+                  label="Publication date"
+                  value={pubDate}
+                  onChange={(e) => setPubDate(e.target.value)}
+                />
+                <Input
+                  name="category"
+                  label="Category"
+                  placeholder="Search by category..."
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                />
+
+                <div>
+                  <span className="mb-2 text-xs font-semibold">Sources</span>
+                  <div className="flex gap-4">
+                    <Checkbox
+                      name="checkbox-newsApiOrg-source"
+                      label="News API"
+                      checked={sources.includes(newsSources.newsApiOrg)}
+                      onChange={() => toggleSource(newsSources.newsApiOrg)}
+                    />
+                    <Checkbox
+                      name="checkbox-nyTimes-source"
+                      label="New York Times"
+                      checked={sources.includes(newsSources.nyTimes)}
+                      onChange={() => toggleSource(newsSources.nyTimes)}
+                    />
+                    <Checkbox
+                      name="checkbox-theGuardian-source"
+                      label="The Guardian"
+                      checked={sources.includes(newsSources.theGuardian)}
+                      onChange={() => toggleSource(newsSources.theGuardian)}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 

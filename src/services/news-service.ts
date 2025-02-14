@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import externalNewsApis from '../constants';
+import { externalNewsApis, newsSources } from '../constants';
 import axios from 'axios';
 import { NyTimesApiResponse } from '../interfaces/nytimes-interface';
 import { NewsOrgApiResponse } from '../interfaces/neworgs-interface';
@@ -9,52 +9,64 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 
 export function useNews() {
-  const searchQuery = useSelector((state: RootState) => state.search.query);
+  const { query, pubDate, category, sources } = useSelector((state: RootState) => state.search);
+
+  const shouldFetchNYTimes = sources.includes(newsSources.nyTimes);
+  const shouldFetchNewsApiOrg = sources.includes(newsSources.newsApiOrg);
+  const shouldFetchTheGuardian = sources.includes(newsSources.theGuardian);
 
   const { data: nyTimesData, isPending: isNyTimesDataLoading } = useQuery({
     queryFn: async () => {
+      if (!shouldFetchNYTimes) return [];
       const { apiBaseURL, apiKey } = externalNewsApis.NYTimes;
       let endpoint = `${apiBaseURL}?&q=`;
-      if (searchQuery) endpoint += searchQuery;
-      endpoint += `&api-key=${apiKey}&pub_date=${moment().format('YYYY-MM-DD')}`;
+      if (query) endpoint += query;
+      if (category) endpoint += `&fq=section_name:${category}`;
+      endpoint += `&api-key=${apiKey}&pub_date=${pubDate ? pubDate : moment().format('YYYY-MM-DD')}`;
 
       const { data } = await axios.get<NyTimesApiResponse>(endpoint);
       return data?.response.docs;
     },
-    queryKey: ['NYTimesNews', searchQuery],
+    queryKey: ['NYTimesNews', query, pubDate, category, sources],
   });
 
-  const { data: newsOrgData, isPending: isNewsOrgDataLoading } = useQuery({
+  const { data: newsApiOrgData, isPending: isNewsApiOrgDataLoading } = useQuery({
     queryFn: async () => {
+      if (!shouldFetchNewsApiOrg) return [];
       const { apiBaseURL, apiKey } = externalNewsApis.NewsOrg;
       let endpoint = `${apiBaseURL}&`;
-      if (searchQuery) endpoint += `q=${searchQuery}&`;
+      if (query) endpoint += `q=${query}&`;
+      if (category) endpoint += `category=${category}&`;
+      if (pubDate) endpoint += `from=${pubDate}&to=${pubDate}&`;
       endpoint += `apiKey=${apiKey}`;
 
       const { data } = await axios.get<NewsOrgApiResponse>(endpoint);
       return data?.articles;
     },
-    queryKey: ['NewsOrgNews', searchQuery],
+    queryKey: ['NewsApiOrgNews', query, pubDate, category, sources],
   });
 
   const { data: theGuardianData, isPending: isTheGuardianDataLoading } = useQuery({
     queryFn: async () => {
+      if (!shouldFetchTheGuardian) return [];
       const { apiBaseURL, apiKey } = externalNewsApis.TheGuardian;
       let endpoint = `${apiBaseURL}?`;
-      if (searchQuery) endpoint += `q=${searchQuery}&`;
+      if (query) endpoint += `q=${query}&`;
+      if (category) endpoint += `tag=${category}&`;
+      if (pubDate) endpoint += `from-date=${pubDate}&to-date=${pubDate}&`;
       endpoint += `api-key=${apiKey}`;
 
       const { data } = await axios.get<TheGuardianApiResponse>(endpoint);
       return data?.response?.results;
     },
-    queryKey: ['TheGuardianNews', searchQuery],
+    queryKey: ['TheGuardianNews', query, pubDate, category, sources],
   });
 
   return {
     nyTimesNews: nyTimesData,
     isNyTimesDataLoading,
-    newsOrgNews: newsOrgData,
-    isNewsOrgDataLoading,
+    newsApiOrgNews: newsApiOrgData,
+    isNewsApiOrgDataLoading,
     theGuardianNews: theGuardianData,
     isTheGuardianDataLoading,
   };

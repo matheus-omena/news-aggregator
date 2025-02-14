@@ -1,4 +1,4 @@
-const externalNewsApis = {
+export const externalNewsApis = {
   NYTimes: {
     apiBaseURL: 'https://api.nytimes.com/svc/search/v2/articlesearch.json',
     apiKey: import.meta.env.VITE_NYTIMES_API_KEY,
@@ -13,4 +13,8 @@ const externalNewsApis = {
   },
 };
 
-export default externalNewsApis;
+export const newsSources = {
+  nyTimes: 'nyTimes',
+  newsApiOrg: 'newsApiOrg',
+  theGuardian: 'theGuardian',
+};
