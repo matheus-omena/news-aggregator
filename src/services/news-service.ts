@@ -4,7 +4,6 @@ import axios from 'axios';
 import { NyTimesApiResponse } from '../interfaces/nytimes-interface';
 import { NewsOrgApiResponse } from '../interfaces/neworgs-interface';
 import { TheGuardianApiResponse } from '../interfaces/theguardian-interface';
-import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 
@@ -22,7 +21,7 @@ export function useNews() {
       let endpoint = `${apiBaseURL}?&q=`;
       if (query) endpoint += query;
       if (category) endpoint += `&fq=section_name:${category}`;
-      endpoint += `&api-key=${apiKey}&pub_date=${pubDate ? pubDate : moment().format('YYYY-MM-DD')}`;
+      endpoint += `&api-key=${apiKey}&pub_date=${pubDate ? pubDate : new Date().toISOString().split('T')[0]}`;
 
       const { data } = await axios.get<NyTimesApiResponse>(endpoint);
       return data?.response.docs;

@@ -25,36 +25,39 @@ export default function Home() {
 
   if (isNyTimesDataLoading && isNewsApiOrgDataLoading && isTheGuardianDataLoading) return <ArticlesSkeleton />;
 
+  const sourcesData = [
+    {
+      name: 'News API',
+      logo: NewsApiLogo,
+      data: NormalizeArticlesData(newsApiOrgNews),
+      loading: isNewsApiOrgDataLoading,
+      key: newsSources.newsApiOrg,
+    },
+    {
+      name: 'New York Times',
+      logo: NYTimesLogo,
+      data: NormalizeArticlesData(nyTimesNews),
+      loading: isNyTimesDataLoading,
+      key: newsSources.nyTimes,
+    },
+    {
+      name: 'The Guardian',
+      logo: TheGuardianLogo,
+      data: NormalizeArticlesData(theGuardianNews),
+      loading: isTheGuardianDataLoading,
+      key: newsSources.theGuardian,
+    },
+  ];
+
   return (
     <React.Fragment>
       <Header />
 
       <main className="mx-auto max-w-7xl space-y-8 px-5 py-6">
-        {selectedSources.includes(newsSources.newsApiOrg) && (
-          <NewsAggregatorSection
-            title="News API"
-            logoUrl={NewsApiLogo}
-            data={NormalizeArticlesData(newsApiOrgNews)}
-            isLoading={isNewsApiOrgDataLoading}
-          />
-        )}
-
-        {selectedSources.includes(newsSources.nyTimes) && (
-          <NewsAggregatorSection
-            title="New York Times"
-            logoUrl={NYTimesLogo}
-            data={NormalizeArticlesData(nyTimesNews)}
-            isLoading={isNyTimesDataLoading}
-          />
-        )}
-
-        {selectedSources.includes(newsSources.theGuardian) && (
-          <NewsAggregatorSection
-            title="The Guardian"
-            logoUrl={TheGuardianLogo}
-            data={NormalizeArticlesData(theGuardianNews)}
-            isLoading={isTheGuardianDataLoading}
-          />
+        {sourcesData.map(({ name, logo, data, loading, key }) =>
+          selectedSources.includes(key) ? (
+            <NewsAggregatorSection key={key} title={name} logoUrl={logo} data={data} isLoading={loading} />
+          ) : null,
         )}
       </main>
     </React.Fragment>
