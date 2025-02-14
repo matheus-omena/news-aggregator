@@ -26,7 +26,7 @@ export function ArticlesSkeleton() {
   );
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-5 py-6">
+    <div className="mx-auto max-w-7xl space-y-8">
       {new Array(3).fill(null).map((_, index) => (
         <div key={`article-section-skeleton_${index}`}>
           <div className="mb-6 flex items-center space-x-6">
