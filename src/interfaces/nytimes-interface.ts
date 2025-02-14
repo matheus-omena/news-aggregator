@@ -14,7 +14,6 @@ export interface NyTimesArticle {
   snippet: string;
   lead_paragraph: string;
   source: string;
-  multimedia: Multimedum[];
   headline: Headline;
   keywords: Keyword[];
   pub_date: string;
@@ -27,32 +26,6 @@ export interface NyTimesArticle {
   _id: string;
   word_count: number;
   uri: string;
-}
-
-export interface Multimedum {
-  rank: number;
-  subtype: string;
-  caption: string;
-  credit: string;
-  type: string;
-  url: string;
-  height: number;
-  width: number;
-  legacy: Legacy;
-  subType: string;
-  crop_name: string;
-}
-
-export interface Legacy {
-  xlarge?: string;
-  xlargewidth?: number;
-  xlargeheight?: number;
-  thumbnail?: string;
-  thumbnailwidth?: number;
-  thumbnailheight?: number;
-  widewidth?: number;
-  wideheight?: number;
-  wide?: string;
 }
 
 export interface Headline {
