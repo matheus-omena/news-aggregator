@@ -1,50 +1,70 @@
-# React + TypeScript + Vite
+# News Aggregator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+News Aggregator is a ReactJS application built with TypeScript and ViteJS. It allows users to aggregate and display news articles efficiently.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Fast and optimized frontend using ViteJS
+- TypeScript for better development experience
+- Uses pnpm as the package manager
+- Containerized with Docker for easy deployment
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Prerequisites
 
-- Configure the top-level `parserOptions` property like this:
+Make sure you have the following installed:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- [pnpm](https://pnpm.io/)
+
+### Clone the repository
+
+```sh
+git clone https://github.com/matheus-omena/news-aggregator.git
+cd news-aggregator
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Install dependencies
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```sh
+pnpm install
 ```
+
+### Start the development server
+
+```sh
+pnpm run dev
+```
+
+The application will be available at `http://localhost:5173`.
+
+## Running with Docker
+
+### Build the Docker image
+
+```sh
+docker build -t news-aggregator .
+```
+
+### Run the container
+
+```sh
+docker run -p 3000:80 news-aggregator
+```
+
+The application will be accessible at `http://localhost:3000`.
+
+### Using Docker Compose
+
+```sh
+docker-compose up -d
+```
+
+## Contributing
+
+Contributions are welcome! Feel free to fork the repository and submit a pull request.
+
+## License
+
+This project is licensed under the MIT License.
